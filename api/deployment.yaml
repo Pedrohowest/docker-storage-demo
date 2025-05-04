@@ -1,0 +1,27 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-api
+  template:
+    metadata:
+      labels:
+        app: storage-api
+    spec:
+      containers:
+      - name: api
+        image: ghcr.io/nathansegers/kubernetes-storage-test
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: storage
+          mountPath: /mnt/data/storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage-pvc
